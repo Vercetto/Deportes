@@ -1,0 +1,52 @@
+{
+  "liga": {
+    "nombre": "Liga Municipal de Básquetbol",
+    "temporada": "2026",
+    "categoria": "Primera División"
+  },
+  "equipos": [
+    { "id": "TITANES",  "nombre": "Titanes",    "color": "#e85d04" },
+    { "id": "AGUILAS",  "nombre": "Águilas",    "color": "#2d6a4f" },
+    { "id": "LOBOS",    "nombre": "Lobos",       "color": "#1d3557" },
+    { "id": "TOROS",    "nombre": "Toros",       "color": "#9b2226" },
+    { "id": "PUMAS",    "nombre": "Pumas",       "color": "#6d597a" },
+    { "id": "RAYOS",    "nombre": "Rayos",       "color": "#e9c46a" }
+  ],
+  "posiciones": [
+    { "equipo": "TITANES", "pj": 8, "pg": 6, "pp": 2, "pf": 672, "pc": 598, "pts": 14 },
+    { "equipo": "AGUILAS", "pj": 8, "pg": 6, "pp": 2, "pf": 641, "pc": 609, "pts": 14 },
+    { "equipo": "LOBOS",   "pj": 8, "pg": 5, "pp": 3, "pf": 620, "pc": 611, "pts": 13 },
+    { "equipo": "TOROS",   "pj": 8, "pg": 3, "pp": 5, "pf": 588, "pc": 630, "pts": 11 },
+    { "equipo": "PUMAS",   "pj": 8, "pg": 2, "pp": 6, "pf": 560, "pc": 648, "pts": 10 },
+    { "equipo": "RAYOS",   "pj": 8, "pg": 2, "pp": 6, "pf": 544, "pc": 629, "pts": 10 }
+  ],
+  "fechas": [
+    {
+      "numero": 1,
+      "label": "Fecha 1",
+      "partidos": [
+        { "id": 101, "local": "TITANES", "visitante": "AGUILAS", "ptsLocal": 88, "ptsVisitante": 74, "estado": "finalizado", "fecha": "2026-03-08", "hora": "19:00", "lugar": "Gimnasio Municipal" },
+        { "id": 102, "local": "LOBOS",   "visitante": "TOROS",   "ptsLocal": 75, "ptsVisitante": 68, "estado": "finalizado", "fecha": "2026-03-08", "hora": "21:00", "lugar": "Polideportivo Sur" },
+        { "id": 103, "local": "PUMAS",   "visitante": "RAYOS",   "ptsLocal": 62, "ptsVisitante": 71, "estado": "finalizado", "fecha": "2026-03-09", "hora": "18:00", "lugar": "Club Atlético" }
+      ]
+    },
+    {
+      "numero": 2,
+      "label": "Fecha 2",
+      "partidos": [
+        { "id": 201, "local": "AGUILAS", "visitante": "LOBOS",   "ptsLocal": 80, "ptsVisitante": 77, "estado": "finalizado", "fecha": "2026-03-15", "hora": "19:00", "lugar": "Gimnasio Municipal" },
+        { "id": 202, "local": "TOROS",   "visitante": "PUMAS",   "ptsLocal": 69, "ptsVisitante": 58, "estado": "finalizado", "fecha": "2026-03-15", "hora": "21:00", "lugar": "Polideportivo Sur" },
+        { "id": 203, "local": "RAYOS",   "visitante": "TITANES", "ptsLocal": 65, "ptsVisitante": 91, "estado": "finalizado", "fecha": "2026-03-16", "hora": "18:00", "lugar": "Club Atlético" }
+      ]
+    },
+    {
+      "numero": 3,
+      "label": "Fecha 3",
+      "partidos": [
+        { "id": 301, "local": "TITANES", "visitante": "LOBOS",   "ptsLocal": null, "ptsVisitante": null, "estado": "pendiente", "fecha": "2026-06-21", "hora": "19:00", "lugar": "Gimnasio Municipal" },
+        { "id": 302, "local": "AGUILAS", "visitante": "TOROS",   "ptsLocal": null, "ptsVisitante": null, "estado": "pendiente", "fecha": "2026-06-21", "hora": "21:00", "lugar": "Polideportivo Sur" },
+        { "id": 303, "local": "RAYOS",   "visitante": "PUMAS",   "ptsLocal": null, "ptsVisitante": null, "estado": "pendiente", "fecha": "2026-06-22", "hora": "18:00", "lugar": "Club Atlético" }
+      ]
+    }
+  ]
+}
