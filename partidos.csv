@@ -1,10 +1,16 @@
 id,fecha_num,local,visitante,pts_local,pts_visitante,estado,fecha,hora,lugar
-101,1,Titanes,Aguilas,88,74,finalizado,2026-03-08,19:00,Gimnasio Municipal
-102,1,Lobos,Toros,75,68,finalizado,2026-03-08,21:00,Polideportivo Sur
-103,1,Pumas,Rayos,62,71,finalizado,2026-03-09,18:00,Club Atletico
-201,2,Aguilas,Lobos,80,77,finalizado,2026-03-15,19:00,Gimnasio Municipal
-202,2,Toros,Pumas,69,58,finalizado,2026-03-15,21:00,Polideportivo Sur
-203,2,Rayos,Titanes,65,91,finalizado,2026-03-16,18:00,Club Atletico
-301,3,Titanes,Lobos,,,pendiente,2026-06-21,19:00,Gimnasio Municipal
-302,3,Aguilas,Toros,,,pendiente,2026-06-21,21:00,Polideportivo Sur
-303,3,Rayos,Pumas,,,pendiente,2026-06-22,18:00,Club Atletico
+1,1,Boston College ,The Sharks ,82,58,finalizado,8 de enero ,16:00,Stadio Italiano 
+2,2,Alemán de Concepción ,CD Huachipato ,56,63,finalizado,9 de enero ,13:30,Stadio Italiano 
+3,3,Stadio Italiano ,Boston College ,37,71,finalizado,9 de enero ,17:00,Stadio Italiano 
+4,4,CD Huachipato ,The Sharks ,67,71,finalizado,10 de enero ,11:00,Stadio Italiano 
+5,5,Stadio Italiano ,Español de Osorno ,60,74,finalizado,10 de enero ,19:30,Stadio Italiano 
+6,6,The Sharks ,Alemán de Concepción ,59,67,finalizado,11 de enero ,11:45,Stadio Italiano 
+7,7,Español de Osorno ,Boston College ,66,54,finalizado,11 de enero ,17:00,Stadio Italiano 
+8,8,CD Huachipato ,Boston College ,41,75,finalizado,12 de enero ,17:00,Stadio Italiano 
+9,9,Stadio Italiano ,The Sharks ,58,78,finalizado,12 de enero ,18:45,Stadio Italiano 
+10,10,Español de Osorno ,Alemán de Concepción ,79,72,finalizado,13 de enero ,10:00,Stadio Italiano 
+11,11,Stadio Italiano ,CD Huachipato ,45,75,finalizado,13 de enero ,18:45,Stadio Italiano 
+12,12,Alemán de Concepción ,Boston College ,88,72,finalizado,14 de enero ,10:00,Stadio Italiano 
+13,13,Español de Osorno ,The Sharks ,59,41,finalizado,14 de enero ,11:45,Stadio Italiano 
+14,14,CD Huachipato ,Español de Osorno ,62,74,finalizado,15 de enero ,10:00,Stadio Italiano 
+15,15,Stadio Italiano ,Alemán de Concepción ,40,72,finalizado,15 de enero ,18:45,Stadio Italiano 
