@@ -1,0 +1,10 @@
+id,fecha_num,local,visitante,pts_local,pts_visitante,estado,fecha,hora,lugar
+101,1,Titanes,Aguilas,88,74,finalizado,2026-03-08,19:00,Gimnasio Municipal
+102,1,Lobos,Toros,75,68,finalizado,2026-03-08,21:00,Polideportivo Sur
+103,1,Pumas,Rayos,62,71,finalizado,2026-03-09,18:00,Club Atletico
+201,2,Aguilas,Lobos,80,77,finalizado,2026-03-15,19:00,Gimnasio Municipal
+202,2,Toros,Pumas,69,58,finalizado,2026-03-15,21:00,Polideportivo Sur
+203,2,Rayos,Titanes,65,91,finalizado,2026-03-16,18:00,Club Atletico
+301,3,Titanes,Lobos,,,pendiente,2026-06-21,19:00,Gimnasio Municipal
+302,3,Aguilas,Toros,,,pendiente,2026-06-21,21:00,Polideportivo Sur
+303,3,Rayos,Pumas,,,pendiente,2026-06-22,18:00,Club Atletico

@@ -6,162 +6,52 @@
 <title>Liga de Básquetbol</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg: #f5f5f0;
-    --surface: #ffffff;
-    --surface2: #f0efeb;
-    --border: rgba(0,0,0,0.08);
-    --border2: rgba(0,0,0,0.14);
-    --text: #1a1a1a;
-    --text2: #555;
-    --text3: #999;
-    --accent: #e85d04;
-    --header-bg: #111827;
-    --header-text: #ffffff;
-    --radius: 10px;
+    --bg: #f5f5f0; --surface: #ffffff; --surface2: #f0efeb;
+    --border: rgba(0,0,0,0.08); --border2: rgba(0,0,0,0.14);
+    --text: #1a1a1a; --text2: #555; --text3: #999;
+    --accent: #e85d04; --header-bg: #111827; --radius: 10px;
     --shadow: 0 1px 3px rgba(0,0,0,0.07);
   }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-  }
-
-  /* ── HEADER ── */
-  header {
-    background: var(--header-bg);
-    color: var(--header-text);
-    padding: 2rem 1.5rem 1.5rem;
-  }
-  .header-eyebrow {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #9ca3af;
-    margin-bottom: 0.4rem;
-  }
+  header { background: var(--header-bg); color: #fff; padding: 2rem 1.5rem 1.5rem; }
+  .header-eyebrow { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #9ca3af; margin-bottom: 0.4rem; }
   header h1 { font-size: 24px; font-weight: 600; margin-bottom: 0.2rem; }
   .header-meta { font-size: 13px; color: #9ca3af; margin-bottom: 1.25rem; }
   .header-stats { display: flex; gap: 2.5rem; }
   .stat-num { font-size: 22px; font-weight: 600; }
   .stat-label { font-size: 11px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; }
 
-  /* ── TABS ── */
   .tabs { background: var(--header-bg); border-bottom: 1px solid #1f2937; display: flex; padding: 0 1.5rem; }
-  .tab {
-    padding: 0.7rem 1.1rem;
-    font-size: 13px;
-    color: #9ca3af;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: color .15s, border-color .15s;
-  }
+  .tab { padding: 0.7rem 1.1rem; font-size: 13px; color: #9ca3af; cursor: pointer; border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; }
   .tab.active { color: #fff; border-bottom-color: var(--accent); }
   .tab:hover:not(.active) { color: #d1d5db; }
 
-  /* ── FECHA NAV ── */
-  .fecha-nav {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 0.7rem 1.5rem;
-    display: flex;
-    gap: 0.4rem;
-    overflow-x: auto;
-    align-items: center;
-  }
-  .fecha-btn {
-    padding: 0.3rem 0.9rem;
-    font-size: 12px;
-    border-radius: 20px;
-    border: 1px solid var(--border2);
-    cursor: pointer;
-    background: transparent;
-    color: var(--text2);
-    white-space: nowrap;
-    transition: all .15s;
-    font-family: inherit;
-  }
+  .fecha-nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0.7rem 1.5rem; display: flex; gap: 0.4rem; overflow-x: auto; align-items: center; }
+  .fecha-btn { padding: 0.3rem 0.9rem; font-size: 12px; border-radius: 20px; border: 1px solid var(--border2); cursor: pointer; background: transparent; color: var(--text2); white-space: nowrap; transition: all .15s; font-family: inherit; }
   .fecha-btn.active { background: var(--header-bg); color: #fff; border-color: transparent; }
   .fecha-btn:hover:not(.active) { background: var(--surface2); }
 
-  /* ── MAIN ── */
   main { padding: 1.25rem 1.5rem; max-width: 860px; margin: 0 auto; }
-
-  /* ── PARTIDOS ── */
   .seccion-titulo { font-size: 14px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
   .partidos-lista { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 2rem; }
 
-  .partido-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 0.85rem 1.1rem;
-    box-shadow: var(--shadow);
-  }
-  .partido-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 11px;
-    color: var(--text3);
-    margin-bottom: 0.6rem;
-  }
-  .partido-body {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  .equipo-nombre {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text);
-  }
+  .partido-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.85rem 1.1rem; box-shadow: var(--shadow); }
+  .partido-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); margin-bottom: 0.6rem; }
+  .partido-body { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 0.75rem; }
+  .equipo-nombre { font-size: 14px; font-weight: 600; }
   .equipo-nombre.visitante { text-align: right; }
-  .marcador {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 26px;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: -0.02em;
-  }
+  .marcador { display: flex; align-items: center; gap: 0.4rem; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
   .marcador-sep { font-size: 18px; color: var(--text3); font-weight: 300; }
-  .marcador.ganador-local .pts-local { color: var(--accent); }
-  .marcador.ganador-visitante .pts-visitante { color: var(--accent); }
-  .badge-pendiente {
-    font-size: 11px;
-    background: #fef3c7;
-    color: #92400e;
-    border-radius: 20px;
-    padding: 0.2rem 0.7rem;
-    font-weight: 500;
-  }
+  .winner { color: var(--accent); }
+  .badge-pendiente { font-size: 11px; background: #fef3c7; color: #92400e; border-radius: 20px; padding: 0.2rem 0.7rem; font-weight: 500; }
 
-  /* ── POSICIONES ── */
   .tabla-wrapper { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  thead th {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text3);
-    padding: 0.5rem 0.75rem;
-    text-align: right;
-    border-bottom: 1px solid var(--border2);
-    background: var(--surface2);
-  }
+  thead th { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text3); padding: 0.5rem 0.75rem; text-align: right; border-bottom: 1px solid var(--border2); background: var(--surface2); }
   thead th:first-child { text-align: left; }
-  tbody tr {
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    transition: background .1s;
-  }
+  tbody tr { border-bottom: 1px solid var(--border); background: var(--surface); }
   tbody tr:hover { background: #fafaf7; }
   tbody td { padding: 0.65rem 0.75rem; text-align: right; color: var(--text2); }
   tbody td:first-child { text-align: left; }
@@ -170,15 +60,13 @@
   .pos-num { font-size: 12px; color: var(--text3); width: 18px; }
   .pos-nombre { font-size: 14px; font-weight: 600; color: var(--text); }
   .pts-col { font-weight: 700; color: var(--text); font-size: 14px; }
-
   .leyenda { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.75rem; }
   .leyenda span { font-size: 11px; color: var(--text3); }
   .leyenda b { color: var(--text2); }
 
-  /* ── LOADING ── */
   #loading { text-align: center; padding: 3rem 1rem; color: var(--text3); font-size: 14px; }
+  .error-msg { background: #fef2f2; border: 1px solid #fecaca; border-radius: var(--radius); padding: 1rem 1.25rem; color: #991b1b; font-size: 13px; line-height: 1.8; }
 
-  /* ── RESPONSIVE ── */
   @media (max-width: 500px) {
     .marcador { font-size: 20px; }
     .equipo-nombre { font-size: 13px; }
@@ -190,18 +78,12 @@
 <body>
 
 <header>
-  <div class="header-eyebrow" id="hdr-eyebrow">Cargando...</div>
-  <h1 id="hdr-titulo">Liga</h1>
-  <div class="header-meta" id="hdr-meta"></div>
+  <div class="header-eyebrow" id="hdr-eyebrow">Primera División</div>
+  <h1 id="hdr-titulo">Liga de Básquetbol</h1>
+  <div class="header-meta" id="hdr-meta">Temporada 2026</div>
   <div class="header-stats">
-    <div>
-      <div class="stat-num" id="hdr-equipos">—</div>
-      <div class="stat-label">Equipos</div>
-    </div>
-    <div>
-      <div class="stat-num" id="hdr-partidos">—</div>
-      <div class="stat-label">Partidos</div>
-    </div>
+    <div><div class="stat-num" id="hdr-equipos">—</div><div class="stat-label">Equipos</div></div>
+    <div><div class="stat-num" id="hdr-partidos">—</div><div class="stat-label">Partidos</div></div>
   </div>
 </header>
 
@@ -214,124 +96,168 @@
 <div class="fecha-nav" id="fecha-nav"></div>
 
 <main>
-  <div id="loading">Cargando datos de la liga...</div>
+  <div id="loading">Cargando datos...</div>
   <div id="section-partidos" style="display:none"></div>
   <div id="section-posiciones" style="display:none"></div>
   <div id="section-fixture" style="display:none"></div>
 </main>
 
 <script>
-let DATA = null;
+let partidos = [];
+let posiciones = [];
+let fechas = [];
 let fechaActiva = 0;
 let tabActiva = 'partidos';
 
-// ── Carga el JSON ──────────────────────────────────────────
+// ── Parser CSV ─────────────────────────────────────────────
+function parseCSV(text) {
+  const lines = text.trim().split('\n').filter(l => l.trim());
+  const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
+  return lines.slice(1).map(line => {
+    // Maneja comas dentro de comillas
+    const vals = [];
+    let cur = '', inQ = false;
+    for (let ch of line) {
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { vals.push(cur.trim()); cur = ''; }
+      else { cur += ch; }
+    }
+    vals.push(cur.trim());
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = (vals[i] || '').replace(/^"|"$/g, '').trim());
+    return obj;
+  }).filter(r => Object.values(r).some(v => v));
+}
+
+// ── Fetch CSV local ────────────────────────────────────────
+async function fetchCSV(archivo) {
+  const res = await fetch(archivo);
+  if (!res.ok) throw new Error(`No se pudo cargar '${archivo}'`);
+  return parseCSV(await res.text());
+}
+
+// ── Agrupar partidos por fecha ─────────────────────────────
+function agruparFechas(rows) {
+  const map = {};
+  rows.forEach(r => {
+    const fn = r.fecha_num || '1';
+    if (!map[fn]) map[fn] = [];
+    map[fn].push({
+      id:            r.id,
+      local:         r.local,
+      visitante:     r.visitante,
+      ptsLocal:      r.pts_local ? parseInt(r.pts_local) : null,
+      ptsVisitante:  r.pts_visitante ? parseInt(r.pts_visitante) : null,
+      estado:        r.estado || 'pendiente',
+      fecha:         r.fecha,
+      hora:          r.hora,
+      lugar:         r.lugar
+    });
+  });
+  return Object.keys(map)
+    .sort((a, b) => parseInt(a) - parseInt(b))
+    .map(n => ({ numero: parseInt(n), label: 'Fecha ' + n, partidos: map[n] }));
+}
+
+// ── Cargar datos ───────────────────────────────────────────
 async function cargarDatos() {
   try {
-    const res = await fetch('datos.json');
-    DATA = await res.json();
-    inicializar();
+    const [rowsPartidos, rowsPosiciones] = await Promise.all([
+      fetchCSV('partidos.csv'),
+      fetchCSV('posiciones.csv')
+    ]);
+
+    partidos   = rowsPartidos;
+    posiciones = rowsPosiciones;
+    fechas     = agruparFechas(partidos);
+
+    // Header stats
+    const equipos = [...new Set(partidos.flatMap(p => [p.local, p.visitante]))];
+    document.getElementById('hdr-equipos').textContent  = equipos.length;
+    document.getElementById('hdr-partidos').textContent = partidos.length;
+    document.getElementById('loading').style.display    = 'none';
+
+    // Botones de fecha
+    const nav = document.getElementById('fecha-nav');
+    fechas.forEach((f, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'fecha-btn' + (i === fechaActiva ? ' active' : '');
+      btn.textContent = f.label;
+      btn.onclick = () => { fechaActiva = i; renderTodo(); };
+      nav.appendChild(btn);
+    });
+
+    // Tabs
+    document.querySelectorAll('.tab').forEach(t => {
+      t.onclick = () => {
+        tabActiva = t.dataset.tab;
+        document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+        renderTodo();
+      };
+    });
+
+    renderTodo();
+
   } catch (e) {
-    document.getElementById('loading').textContent =
-      'Error al cargar datos.json. Asegurate de abrir el archivo desde un servidor local.';
+    document.getElementById('loading').innerHTML = `
+      <div class="error-msg">
+        <b>No se pudieron cargar los datos.</b><br>
+        Asegurate de que <b>partidos.csv</b> y <b>posiciones.csv</b> estén
+        en la misma carpeta que el <b>index.html</b>.<br>
+        Si estás abriendo el archivo directamente (sin Live Server), el navegador
+        bloquea la lectura de archivos locales. Usá Live Server en VSCodium.<br><br>
+        <small>Error: ${e.message}</small>
+      </div>`;
   }
 }
 
-function inicializar() {
-  document.getElementById('loading').style.display = 'none';
-
-  // Header
-  document.getElementById('hdr-eyebrow').textContent = DATA.liga.categoria;
-  document.getElementById('hdr-titulo').textContent = DATA.liga.nombre;
-  document.getElementById('hdr-meta').textContent = 'Temporada ' + DATA.liga.temporada;
-  document.getElementById('hdr-equipos').textContent = DATA.equipos.length;
-  const totalPartidos = DATA.fechas.reduce((s, f) => s + f.partidos.length, 0);
-  document.getElementById('hdr-partidos').textContent = totalPartidos;
-
-  // Botones de fecha
-  const nav = document.getElementById('fecha-nav');
-  DATA.fechas.forEach((f, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'fecha-btn' + (i === fechaActiva ? ' active' : '');
-    btn.textContent = f.label;
-    btn.onclick = () => { fechaActiva = i; renderTodo(); };
-    nav.appendChild(btn);
-  });
-
-  // Tabs
-  document.querySelectorAll('.tab').forEach(t => {
-    t.onclick = () => {
-      tabActiva = t.dataset.tab;
-      document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-      t.classList.add('active');
-      renderTodo();
-    };
-  });
-
-  renderTodo();
-}
-
+// ── Render general ─────────────────────────────────────────
 function renderTodo() {
-  // Actualizar botones fecha
-  document.querySelectorAll('.fecha-btn').forEach((b, i) => {
-    b.classList.toggle('active', i === fechaActiva);
-  });
-  // Secciones
+  document.querySelectorAll('.fecha-btn').forEach((b, i) => b.classList.toggle('active', i === fechaActiva));
   ['partidos','posiciones','fixture'].forEach(s => {
     document.getElementById('section-' + s).style.display = s === tabActiva ? 'block' : 'none';
   });
-  if (tabActiva === 'partidos') renderPartidos();
+  if (tabActiva === 'partidos')  renderPartidos();
   if (tabActiva === 'posiciones') renderPosiciones();
-  if (tabActiva === 'fixture') renderFixture();
+  if (tabActiva === 'fixture')   renderFixture();
 }
 
-// ── Helpers ───────────────────────────────────────────────
-function nombreEquipo(id) {
-  const eq = DATA.equipos.find(e => e.id === id);
-  return eq ? eq.nombre : id;
-}
-
-function colorEquipo(id) {
-  const eq = DATA.equipos.find(e => e.id === id);
-  return eq ? eq.color : '#888';
-}
-
+// ── Helpers ────────────────────────────────────────────────
 function formatFecha(str) {
   if (!str) return '';
   const [y, m, d] = str.split('-');
   const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  return `${d} ${meses[parseInt(m)-1]} ${y}`;
+  return `${parseInt(d)} ${meses[parseInt(m)-1]} ${y}`;
 }
 
-// ── RESULTADOS ────────────────────────────────────────────
+// ── RESULTADOS ─────────────────────────────────────────────
 function renderPartidos() {
-  const fecha = DATA.fechas[fechaActiva];
+  if (!fechas.length) return;
+  const fecha = fechas[fechaActiva];
   let html = `<div class="seccion-titulo">${fecha.label} — Resultados</div>
               <div class="partidos-lista">`;
 
   fecha.partidos.forEach(p => {
-    const finalizado = p.estado === 'finalizado';
-    const ganadorLocal = finalizado && p.ptsLocal > p.ptsVisitante;
-    const ganadorVisitante = finalizado && p.ptsVisitante > p.ptsLocal;
-    const marcadorClass = ganadorLocal ? 'marcador ganador-local' : ganadorVisitante ? 'marcador ganador-visitante' : 'marcador';
-
+    const fin = p.estado === 'finalizado';
+    const wL  = fin && p.ptsLocal > p.ptsVisitante;
+    const wV  = fin && p.ptsVisitante > p.ptsLocal;
     html += `
     <div class="partido-card">
       <div class="partido-meta">
-        <span>#${p.id} · ${p.lugar}</span>
-        <span>${formatFecha(p.fecha)} · ${p.hora}</span>
+        <span>#${p.id} · ${p.lugar || ''}</span>
+        <span>${formatFecha(p.fecha)} · ${p.hora || ''}</span>
       </div>
       <div class="partido-body">
-        <div class="equipo-nombre">${nombreEquipo(p.local)}</div>
-        <div class="${marcadorClass}">
-          ${finalizado
-            ? `<span class="pts-local">${p.ptsLocal}</span>
+        <div class="equipo-nombre">${p.local}</div>
+        <div class="marcador">
+          ${fin
+            ? `<span class="${wL ? 'winner' : ''}">${p.ptsLocal}</span>
                <span class="marcador-sep">–</span>
-               <span class="pts-visitante">${p.ptsVisitante}</span>`
-            : `<span class="badge-pendiente">Por jugar</span>`
-          }
+               <span class="${wV ? 'winner' : ''}">${p.ptsVisitante}</span>`
+            : `<span class="badge-pendiente">Por jugar</span>`}
         </div>
-        <div class="equipo-nombre visitante">${nombreEquipo(p.visitante)}</div>
+        <div class="equipo-nombre visitante">${p.visitante}</div>
       </div>
     </div>`;
   });
@@ -340,84 +266,68 @@ function renderPartidos() {
   document.getElementById('section-partidos').innerHTML = html;
 }
 
-// ── POSICIONES ────────────────────────────────────────────
+// ── POSICIONES ─────────────────────────────────────────────
 function renderPosiciones() {
-  const pos = DATA.posiciones;
   let html = `<div class="seccion-titulo">Tabla de posiciones</div>
-    <div class="tabla-wrapper">
-    <table>
-      <thead>
-        <tr>
-          <th>Equipo</th>
-          <th>PTS</th>
-          <th>PG</th>
-          <th>PP</th>
-          <th>PJ</th>
-          <th>PF</th>
-          <th>PC</th>
-          <th>DIF</th>
-        </tr>
-      </thead>
-      <tbody>`;
+    <div class="tabla-wrapper"><table>
+      <thead><tr>
+        <th>Equipo</th><th>PTS</th><th>PG</th><th>PP</th>
+        <th>PJ</th><th>PF</th><th>PC</th><th>DIF</th>
+      </tr></thead><tbody>`;
 
-  pos.forEach((r, i) => {
-    const dif = r.pf - r.pc;
+  posiciones.forEach((r, i) => {
+    const dif   = parseInt(r.pf || 0) - parseInt(r.pc || 0);
     const difStr = dif > 0 ? '+' + dif : '' + dif;
-    const barraColor = i < 2 ? '#22c55e' : i >= pos.length - 1 ? '#ef4444' : 'transparent';
-    html += `
-      <tr>
-        <td>
-          <div class="pos-col">
-            <div class="pos-barra" style="background:${barraColor}"></div>
-            <div class="pos-num">${i+1}</div>
-            <div class="pos-nombre">${nombreEquipo(r.equipo)}</div>
-          </div>
-        </td>
-        <td class="pts-col">${r.pts}</td>
-        <td>${r.pg}</td>
-        <td>${r.pp}</td>
-        <td>${r.pj}</td>
-        <td>${r.pf}</td>
-        <td>${r.pc}</td>
-        <td>${difStr}</td>
-      </tr>`;
+    const color  = i < 2 ? '#22c55e' : i >= posiciones.length - 1 ? '#ef4444' : 'transparent';
+    html += `<tr>
+      <td><div class="pos-col">
+        <div class="pos-barra" style="background:${color}"></div>
+        <div class="pos-num">${i + 1}</div>
+        <div class="pos-nombre">${r.equipo}</div>
+      </div></td>
+      <td class="pts-col">${r.pts}</td>
+      <td>${r.pg}</td><td>${r.pp}</td><td>${r.pj}</td>
+      <td>${r.pf}</td><td>${r.pc}</td><td>${difStr}</td>
+    </tr>`;
   });
 
   html += `</tbody></table></div>
     <div class="leyenda">
       <span><b>PTS</b> Puntos</span>
-      <span><b>PG</b> Partidos ganados</span>
-      <span><b>PP</b> Partidos perdidos</span>
-      <span><b>PJ</b> Partidos jugados</span>
+      <span><b>PG</b> Ganados</span>
+      <span><b>PP</b> Perdidos</span>
+      <span><b>PJ</b> Jugados</span>
       <span><b>PF</b> Puntos a favor</span>
-      <span><b>PC</b> Puntos en contra</span>
+      <span><b>PC</b> En contra</span>
       <span><b>DIF</b> Diferencia</span>
     </div>`;
 
   document.getElementById('section-posiciones').innerHTML = html;
 }
 
-// ── FIXTURE ───────────────────────────────────────────────
+// ── FIXTURE ────────────────────────────────────────────────
 function renderFixture() {
   let html = `<div class="seccion-titulo">Fixture completo</div>
               <div style="display:flex;flex-direction:column;gap:1.5rem;">`;
 
-  DATA.fechas.forEach((fecha, fi) => {
+  fechas.forEach(fecha => {
     html += `<div>
-      <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:0.5rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border);">${fecha.label}</div>
+      <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:0.5rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border);">
+        ${fecha.label}
+      </div>
       <div style="display:flex;flex-direction:column;gap:0.35rem;">`;
 
     fecha.partidos.forEach(p => {
-      const finalizado = p.estado === 'finalizado';
+      const fin = p.estado === 'finalizado';
       html += `
         <div style="display:flex;align-items:center;gap:0.75rem;font-size:13px;padding:0.4rem 0;">
-          <span style="color:var(--text3);min-width:60px;">${p.hora}</span>
-          <span style="flex:1;font-weight:500;">${nombreEquipo(p.local)}</span>
-          <span style="font-weight:700;min-width:60px;text-align:center;">
-            ${finalizado ? p.ptsLocal + ' – ' + p.ptsVisitante : 'vs'}
+          <span style="color:var(--text3);min-width:55px;">${p.hora || ''}</span>
+          <span style="flex:1;font-weight:500;">${p.local}</span>
+          <span style="font-weight:700;min-width:70px;text-align:center;">
+            ${fin ? p.ptsLocal + ' – ' + p.ptsVisitante : 'vs'}
           </span>
-          <span style="flex:1;text-align:right;font-weight:500;">${nombreEquipo(p.visitante)}</span>
-          <span style="color:var(--text3);font-size:11px;min-width:90px;text-align:right;">${formatFecha(p.fecha)}</span>
+          <span style="flex:1;text-align:right;font-weight:500;">${p.visitante}</span>
+          <span style="color:var(--text3);font-size:11px;min-width:80px;text-align:right;">${formatFecha(p.fecha)}</span>
         </div>`;
     });
 
@@ -428,7 +338,6 @@ function renderFixture() {
   document.getElementById('section-fixture').innerHTML = html;
 }
 
-// ── Arrancar ──────────────────────────────────────────────
 cargarDatos();
 </script>
 </body>
