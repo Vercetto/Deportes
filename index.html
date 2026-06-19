@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Liga de Básquetbol</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -23,8 +24,8 @@
   .stat-num { font-size: 22px; font-weight: 600; }
   .stat-label { font-size: 11px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; }
 
-  .tabs { background: var(--header-bg); border-bottom: 1px solid #1f2937; display: flex; padding: 0 1.5rem; }
-  .tab { padding: 0.7rem 1.1rem; font-size: 13px; color: #9ca3af; cursor: pointer; border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; }
+  .tabs { background: var(--header-bg); border-bottom: 1px solid #1f2937; display: flex; padding: 0 1.5rem; overflow-x: auto; }
+  .tab { padding: 0.7rem 1.1rem; font-size: 13px; color: #9ca3af; cursor: pointer; border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; white-space: nowrap; }
   .tab.active { color: #fff; border-bottom-color: var(--accent); }
   .tab:hover:not(.active) { color: #d1d5db; }
 
@@ -33,7 +34,7 @@
   .fecha-btn.active { background: var(--header-bg); color: #fff; border-color: transparent; }
   .fecha-btn:hover:not(.active) { background: var(--surface2); }
 
-  main { padding: 1.25rem 1.5rem; max-width: 860px; margin: 0 auto; }
+  main { padding: 1.25rem 1.5rem; max-width: 960px; margin: 0 auto; }
   .seccion-titulo { font-size: 14px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
   .partidos-lista { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 2rem; }
 
@@ -64,14 +65,45 @@
   .leyenda span { font-size: 11px; color: var(--text3); }
   .leyenda b { color: var(--text2); }
 
+  /* ── MAPA ── */
+  #section-clubes { display: none; }
+  .clubes-layout { display: grid; grid-template-columns: 1fr 340px; gap: 1rem; height: calc(100vh - 220px); min-height: 500px; }
+  #mapa { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
+  .clubes-lista { overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; }
+  .club-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    cursor: pointer; transition: border-color .15s, box-shadow .15s;
+    box-shadow: var(--shadow);
+  }
+  .club-card:hover, .club-card.activo {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(232,93,4,0.15);
+  }
+  .club-card img { width: 100%; height: 100px; object-fit: cover; display: block; background: var(--surface2); }
+  .club-card-body { padding: 0.65rem 0.85rem; }
+  .club-card-nombre { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 0.2rem; }
+  .club-card-dir { font-size: 12px; color: var(--text3); }
+  .club-card-comuna { display: inline-block; font-size: 11px; background: var(--surface2); color: var(--text2); border-radius: 20px; padding: 0.15rem 0.6rem; margin-top: 0.35rem; }
+
+  /* Popup del mapa */
+  .leaflet-popup-content { margin: 0 !important; padding: 0 !important; width: 200px !important; }
+  .popup-img { width: 100%; height: 90px; object-fit: cover; display: block; border-radius: 6px 6px 0 0; }
+  .popup-body { padding: 0.6rem 0.75rem; }
+  .popup-nombre { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 0.15rem; }
+  .popup-dir { font-size: 11px; color: var(--text3); }
+  .leaflet-popup-content-wrapper { border-radius: 10px !important; padding: 0 !important; overflow: hidden; }
+
   #loading { text-align: center; padding: 3rem 1rem; color: var(--text3); font-size: 14px; }
   .error-msg { background: #fef2f2; border: 1px solid #fecaca; border-radius: var(--radius); padding: 1rem 1.25rem; color: #991b1b; font-size: 13px; line-height: 1.8; }
 
-  @media (max-width: 500px) {
+  @media (max-width: 700px) {
+    .clubes-layout { grid-template-columns: 1fr; height: auto; }
+    #mapa { height: 320px; }
+    .clubes-lista { max-height: 340px; }
     .marcador { font-size: 20px; }
     .equipo-nombre { font-size: 13px; }
     header h1 { font-size: 20px; }
-    .header-stats { gap: 1.5rem; }
   }
 </style>
 </head>
@@ -91,6 +123,7 @@
   <div class="tab active" data-tab="partidos">Resultados</div>
   <div class="tab" data-tab="posiciones">Posiciones</div>
   <div class="tab" data-tab="fixture">Fixture</div>
+  <div class="tab" data-tab="clubes">🏀 Clubes</div>
 </div>
 
 <div class="fecha-nav" id="fecha-nav"></div>
@@ -100,21 +133,20 @@
   <div id="section-partidos" style="display:none"></div>
   <div id="section-posiciones" style="display:none"></div>
   <div id="section-fixture" style="display:none"></div>
+  <div id="section-clubes"></div>
 </main>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-let partidos = [];
-let posiciones = [];
-let fechas = [];
-let fechaActiva = 0;
-let tabActiva = 'partidos';
+let partidos = [], posiciones = [], fechas = [], clubes = [];
+let fechaActiva = 0, tabActiva = 'partidos';
+let mapa = null, marcadores = [];
 
 // ── Parser CSV ─────────────────────────────────────────────
 function parseCSV(text) {
   const lines = text.trim().split('\n').filter(l => l.trim());
   const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
   return lines.slice(1).map(line => {
-    // Maneja comas dentro de comillas
     const vals = [];
     let cur = '', inQ = false;
     for (let ch of line) {
@@ -129,55 +161,44 @@ function parseCSV(text) {
   }).filter(r => Object.values(r).some(v => v));
 }
 
-// ── Fetch CSV local ────────────────────────────────────────
 async function fetchCSV(archivo) {
   const res = await fetch(archivo);
   if (!res.ok) throw new Error(`No se pudo cargar '${archivo}'`);
   return parseCSV(await res.text());
 }
 
-// ── Agrupar partidos por fecha ─────────────────────────────
 function agruparFechas(rows) {
   const map = {};
   rows.forEach(r => {
     const fn = r.fecha_num || '1';
     if (!map[fn]) map[fn] = [];
     map[fn].push({
-      id:            r.id,
-      local:         r.local,
-      visitante:     r.visitante,
-      ptsLocal:      r.pts_local ? parseInt(r.pts_local) : null,
-      ptsVisitante:  r.pts_visitante ? parseInt(r.pts_visitante) : null,
-      estado:        r.estado || 'pendiente',
-      fecha:         r.fecha,
-      hora:          r.hora,
-      lugar:         r.lugar
+      id: r.id, local: r.local, visitante: r.visitante,
+      ptsLocal: r.pts_local ? parseInt(r.pts_local) : null,
+      ptsVisitante: r.pts_visitante ? parseInt(r.pts_visitante) : null,
+      estado: r.estado || 'pendiente', fecha: r.fecha, hora: r.hora, lugar: r.lugar
     });
   });
-  return Object.keys(map)
-    .sort((a, b) => parseInt(a) - parseInt(b))
+  return Object.keys(map).sort((a,b) => parseInt(a)-parseInt(b))
     .map(n => ({ numero: parseInt(n), label: 'Fecha ' + n, partidos: map[n] }));
 }
 
 // ── Cargar datos ───────────────────────────────────────────
 async function cargarDatos() {
   try {
-    const [rowsPartidos, rowsPosiciones] = await Promise.all([
+    const [rowsPartidos, rowsPosiciones, rowsClubes] = await Promise.all([
       fetchCSV('partidos.csv'),
-      fetchCSV('posiciones.csv')
+      fetchCSV('posiciones.csv'),
+      fetchCSV('clubes.csv')
     ]);
+    partidos = rowsPartidos; posiciones = rowsPosiciones;
+    clubes = rowsClubes; fechas = agruparFechas(partidos);
 
-    partidos   = rowsPartidos;
-    posiciones = rowsPosiciones;
-    fechas     = agruparFechas(partidos);
-
-    // Header stats
     const equipos = [...new Set(partidos.flatMap(p => [p.local, p.visitante]))];
-    document.getElementById('hdr-equipos').textContent  = equipos.length;
+    document.getElementById('hdr-equipos').textContent = equipos.length;
     document.getElementById('hdr-partidos').textContent = partidos.length;
-    document.getElementById('loading').style.display    = 'none';
+    document.getElementById('loading').style.display = 'none';
 
-    // Botones de fecha
     const nav = document.getElementById('fecha-nav');
     fechas.forEach((f, i) => {
       const btn = document.createElement('button');
@@ -187,46 +208,42 @@ async function cargarDatos() {
       nav.appendChild(btn);
     });
 
-    // Tabs
     document.querySelectorAll('.tab').forEach(t => {
       t.onclick = () => {
         tabActiva = t.dataset.tab;
         document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
         t.classList.add('active');
+        // Ocultar/mostrar fecha-nav según tab
+        document.getElementById('fecha-nav').style.display =
+          tabActiva === 'partidos' || tabActiva === 'fixture' ? 'flex' : 'none';
         renderTodo();
       };
     });
 
     renderTodo();
-
-  } catch (e) {
+  } catch(e) {
     document.getElementById('loading').innerHTML = `
-      <div class="error-msg">
-        <b>No se pudieron cargar los datos.</b><br>
-        Asegurate de que <b>partidos.csv</b> y <b>posiciones.csv</b> estén
-        en la misma carpeta que el <b>index.html</b>.<br>
-        Si estás abriendo el archivo directamente (sin Live Server), el navegador
-        bloquea la lectura de archivos locales. Usá Live Server en VSCodium.<br><br>
-        <small>Error: ${e.message}</small>
-      </div>`;
+      <div class="error-msg"><b>No se pudieron cargar los datos.</b><br>
+      Asegurate de que <b>partidos.csv</b>, <b>posiciones.csv</b> y <b>clubes.csv</b>
+      estén en la misma carpeta que el index.html y usá Live Server.<br><br>
+      <small>Error: ${e.message}</small></div>`;
   }
 }
 
-// ── Render general ─────────────────────────────────────────
 function renderTodo() {
-  document.querySelectorAll('.fecha-btn').forEach((b, i) => b.classList.toggle('active', i === fechaActiva));
-  ['partidos','posiciones','fixture'].forEach(s => {
+  document.querySelectorAll('.fecha-btn').forEach((b,i) => b.classList.toggle('active', i === fechaActiva));
+  ['partidos','posiciones','fixture','clubes'].forEach(s => {
     document.getElementById('section-' + s).style.display = s === tabActiva ? 'block' : 'none';
   });
   if (tabActiva === 'partidos')  renderPartidos();
   if (tabActiva === 'posiciones') renderPosiciones();
   if (tabActiva === 'fixture')   renderFixture();
+  if (tabActiva === 'clubes')    renderClubes();
 }
 
-// ── Helpers ────────────────────────────────────────────────
 function formatFecha(str) {
   if (!str) return '';
-  const [y, m, d] = str.split('-');
+  const [y,m,d] = str.split('-');
   const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
   return `${parseInt(d)} ${meses[parseInt(m)-1]} ${y}`;
 }
@@ -235,33 +252,22 @@ function formatFecha(str) {
 function renderPartidos() {
   if (!fechas.length) return;
   const fecha = fechas[fechaActiva];
-  let html = `<div class="seccion-titulo">${fecha.label} — Resultados</div>
-              <div class="partidos-lista">`;
-
+  let html = `<div class="seccion-titulo">${fecha.label} — Resultados</div><div class="partidos-lista">`;
   fecha.partidos.forEach(p => {
     const fin = p.estado === 'finalizado';
-    const wL  = fin && p.ptsLocal > p.ptsVisitante;
-    const wV  = fin && p.ptsVisitante > p.ptsLocal;
-    html += `
-    <div class="partido-card">
-      <div class="partido-meta">
-        <span>#${p.id} · ${p.lugar || ''}</span>
-        <span>${formatFecha(p.fecha)} · ${p.hora || ''}</span>
-      </div>
+    const wL = fin && p.ptsLocal > p.ptsVisitante;
+    const wV = fin && p.ptsVisitante > p.ptsLocal;
+    html += `<div class="partido-card">
+      <div class="partido-meta"><span>#${p.id} · ${p.lugar||''}</span><span>${formatFecha(p.fecha)} · ${p.hora||''}</span></div>
       <div class="partido-body">
         <div class="equipo-nombre">${p.local}</div>
         <div class="marcador">
-          ${fin
-            ? `<span class="${wL ? 'winner' : ''}">${p.ptsLocal}</span>
-               <span class="marcador-sep">–</span>
-               <span class="${wV ? 'winner' : ''}">${p.ptsVisitante}</span>`
-            : `<span class="badge-pendiente">Por jugar</span>`}
+          ${fin ? `<span class="${wL?'winner':''}">${p.ptsLocal}</span><span class="marcador-sep">–</span><span class="${wV?'winner':''}">${p.ptsVisitante}</span>`
+               : `<span class="badge-pendiente">Por jugar</span>`}
         </div>
         <div class="equipo-nombre visitante">${p.visitante}</div>
-      </div>
-    </div>`;
+      </div></div>`;
   });
-
   html += '</div>';
   document.getElementById('section-partidos').innerHTML = html;
 }
@@ -270,72 +276,154 @@ function renderPartidos() {
 function renderPosiciones() {
   let html = `<div class="seccion-titulo">Tabla de posiciones</div>
     <div class="tabla-wrapper"><table>
-      <thead><tr>
-        <th>Equipo</th><th>PTS</th><th>PG</th><th>PP</th>
-        <th>PJ</th><th>PF</th><th>PC</th><th>DIF</th>
-      </tr></thead><tbody>`;
-
-  posiciones.forEach((r, i) => {
-    const dif   = parseInt(r.pf || 0) - parseInt(r.pc || 0);
-    const difStr = dif > 0 ? '+' + dif : '' + dif;
-    const color  = i < 2 ? '#22c55e' : i >= posiciones.length - 1 ? '#ef4444' : 'transparent';
-    html += `<tr>
-      <td><div class="pos-col">
-        <div class="pos-barra" style="background:${color}"></div>
-        <div class="pos-num">${i + 1}</div>
-        <div class="pos-nombre">${r.equipo}</div>
-      </div></td>
-      <td class="pts-col">${r.pts}</td>
-      <td>${r.pg}</td><td>${r.pp}</td><td>${r.pj}</td>
-      <td>${r.pf}</td><td>${r.pc}</td><td>${difStr}</td>
-    </tr>`;
+      <thead><tr><th>Equipo</th><th>PTS</th><th>PG</th><th>PP</th><th>PJ</th><th>PF</th><th>PC</th><th>DIF</th></tr></thead><tbody>`;
+  posiciones.forEach((r,i) => {
+    const dif = parseInt(r.pf||0) - parseInt(r.pc||0);
+    const difStr = dif > 0 ? '+'+dif : ''+dif;
+    const color = i < 2 ? '#22c55e' : i >= posiciones.length-1 ? '#ef4444' : 'transparent';
+    html += `<tr><td><div class="pos-col">
+      <div class="pos-barra" style="background:${color}"></div>
+      <div class="pos-num">${i+1}</div>
+      <div class="pos-nombre">${r.equipo}</div>
+    </div></td>
+    <td class="pts-col">${r.pts}</td><td>${r.pg}</td><td>${r.pp}</td>
+    <td>${r.pj}</td><td>${r.pf}</td><td>${r.pc}</td><td>${difStr}</td></tr>`;
   });
-
   html += `</tbody></table></div>
     <div class="leyenda">
-      <span><b>PTS</b> Puntos</span>
-      <span><b>PG</b> Ganados</span>
-      <span><b>PP</b> Perdidos</span>
-      <span><b>PJ</b> Jugados</span>
-      <span><b>PF</b> Puntos a favor</span>
-      <span><b>PC</b> En contra</span>
-      <span><b>DIF</b> Diferencia</span>
+      <span><b>PTS</b> Puntos</span><span><b>PG</b> Ganados</span><span><b>PP</b> Perdidos</span>
+      <span><b>PJ</b> Jugados</span><span><b>PF</b> A favor</span><span><b>PC</b> En contra</span>
     </div>`;
-
   document.getElementById('section-posiciones').innerHTML = html;
 }
 
 // ── FIXTURE ────────────────────────────────────────────────
 function renderFixture() {
-  let html = `<div class="seccion-titulo">Fixture completo</div>
-              <div style="display:flex;flex-direction:column;gap:1.5rem;">`;
-
+  let html = `<div class="seccion-titulo">Fixture completo</div><div style="display:flex;flex-direction:column;gap:1.5rem;">`;
   fechas.forEach(fecha => {
-    html += `<div>
-      <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:0.5rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border);">
-        ${fecha.label}
-      </div>
+    html += `<div><div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:0.5rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border);">${fecha.label}</div>
       <div style="display:flex;flex-direction:column;gap:0.35rem;">`;
-
     fecha.partidos.forEach(p => {
       const fin = p.estado === 'finalizado';
-      html += `
-        <div style="display:flex;align-items:center;gap:0.75rem;font-size:13px;padding:0.4rem 0;">
-          <span style="color:var(--text3);min-width:55px;">${p.hora || ''}</span>
-          <span style="flex:1;font-weight:500;">${p.local}</span>
-          <span style="font-weight:700;min-width:70px;text-align:center;">
-            ${fin ? p.ptsLocal + ' – ' + p.ptsVisitante : 'vs'}
-          </span>
-          <span style="flex:1;text-align:right;font-weight:500;">${p.visitante}</span>
-          <span style="color:var(--text3);font-size:11px;min-width:80px;text-align:right;">${formatFecha(p.fecha)}</span>
-        </div>`;
+      html += `<div style="display:flex;align-items:center;gap:0.75rem;font-size:13px;padding:0.4rem 0;">
+        <span style="color:var(--text3);min-width:55px;">${p.hora||''}</span>
+        <span style="flex:1;font-weight:500;">${p.local}</span>
+        <span style="font-weight:700;min-width:70px;text-align:center;">${fin ? p.ptsLocal+' – '+p.ptsVisitante : 'vs'}</span>
+        <span style="flex:1;text-align:right;font-weight:500;">${p.visitante}</span>
+        <span style="color:var(--text3);font-size:11px;min-width:80px;text-align:right;">${formatFecha(p.fecha)}</span>
+      </div>`;
     });
-
     html += '</div></div>';
   });
-
   html += '</div>';
   document.getElementById('section-fixture').innerHTML = html;
+}
+
+// ── CLUBES + MAPA ──────────────────────────────────────────
+function renderClubes() {
+  const sec = document.getElementById('section-clubes');
+
+  sec.innerHTML = `
+    <div class="seccion-titulo" style="margin-bottom:0.75rem;">Clubes registrados — Santiago</div>
+    <div class="clubes-layout">
+      <div id="mapa"></div>
+      <div class="clubes-lista" id="clubes-lista"></div>
+    </div>`;
+
+  // Inicializar mapa solo una vez
+  if (!mapa) {
+    mapa = L.map('mapa').setView([-33.45, -70.65], 11);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a>'
+    }).addTo(mapa);
+  } else {
+    mapa.invalidateSize();
+  }
+
+  // Limpiar marcadores anteriores
+  marcadores.forEach(m => m.remove());
+  marcadores = [];
+
+  const iconoClub = L.divIcon({
+    className: '',
+    html: `<div style="
+      width:32px;height:32px;background:#e85d04;border-radius:50% 50% 50% 0;
+      transform:rotate(-45deg);border:2px solid #fff;
+      box-shadow:0 2px 6px rgba(0,0,0,0.3);">
+    </div>`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -34]
+  });
+
+  const lista = document.getElementById('clubes-lista');
+  lista.innerHTML = '';
+
+  let sinCoordenadas = 0;
+
+  clubes.forEach((club) => {
+    const lat = parseFloat(club.lat);
+    const lng = parseFloat(club.lng);
+    const tieneCoordenadas = !isNaN(lat) && !isNaN(lng) && club.lat && club.lng;
+
+    // Tarjeta siempre visible
+    const card = document.createElement('div');
+    card.className = 'club-card';
+    if (!tieneCoordenadas) {
+      card.style.opacity = '0.5';
+      card.title = 'Sin coordenadas — corré geocodificar_clubes.py';
+    }
+    card.innerHTML = `
+      <img src="${club.imagen}" alt="${club.nombre}"
+           onerror="this.style.display='none'">
+      <div class="club-card-body">
+        <div class="club-card-nombre">${club.nombre}</div>
+        <div class="club-card-dir">${club.direccion}</div>
+        <span class="club-card-comuna">${club.comuna}</span>
+        ${!tieneCoordenadas ? '<span style="font-size:10px;color:#e85d04;">⚠ Sin ubicación</span>' : ''}
+      </div>`;
+    lista.appendChild(card);
+
+    if (!tieneCoordenadas) { sinCoordenadas++; return; }
+
+    // Marcador en el mapa
+    const marker = L.marker([lat, lng], { icon: iconoClub }).addTo(mapa);
+    marker.bindPopup(`
+      <img class="popup-img" src="${club.imagen}" alt="${club.nombre}"
+           onerror="this.style.display='none'">
+      <div class="popup-body">
+        <div class="popup-nombre">${club.nombre}</div>
+        <div class="popup-dir">${club.direccion}<br>${club.comuna}</div>
+      </div>`);
+    marcadores.push(marker);
+
+    card.onclick = () => {
+      document.querySelectorAll('.club-card').forEach(c => c.classList.remove('activo'));
+      card.classList.add('activo');
+      mapa.flyTo([lat, lng], 15, { duration: 0.8 });
+      marker.openPopup();
+    };
+
+    marker.on('click', () => {
+      document.querySelectorAll('.club-card').forEach(c => c.classList.remove('activo'));
+      card.classList.add('activo');
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  });
+
+  if (marcadores.length > 0) {
+    const group = L.featureGroup(marcadores);
+    mapa.fitBounds(group.getBounds().pad(0.15));
+  }
+
+  if (sinCoordenadas > 0) {
+    const aviso = document.createElement('div');
+    aviso.style.cssText = 'font-size:12px;color:#92400e;background:#fef3c7;border-radius:8px;padding:0.6rem 0.85rem;margin-top:0.75rem;';
+    aviso.innerHTML = `⚠ <b>${sinCoordenadas} club(es)</b> sin coordenadas. Corré <b>geocodificar_clubes.py</b> para ubicarlos.`;
+    document.getElementById('section-clubes').appendChild(aviso);
+  }
+
+  setTimeout(() => mapa.invalidateSize(), 100);
 }
 
 cargarDatos();
